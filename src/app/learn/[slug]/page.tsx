@@ -23,7 +23,7 @@ export default async function LessonPage({ params }: PageProps) {
   const { content } = matter(fileContent);
 
   return (
-    <article className="prose max-w-3xl mx-auto">
+    <article className="prose max-w-3xl">
       <MDXRemote source={content} />
     </article>
   );
