@@ -19,6 +19,7 @@ export default function RootLayout({
         {/* Header / Navbar */}
         <header className="bg-white shadow-sm">
           <nav className="container mx-auto px-6 py-4 flex items-center gap-6">
+            <Link href="/learn">Learn</Link>
             <Link
               href="/"
               className="text-xl font-bold tracking-tight text-gray-900"
