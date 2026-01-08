@@ -1,19 +1,20 @@
 "use client";
 
-import { useEffect } from "react";
+export default function CompleteLessonButton({ slug }: { slug: string }) {
+  const markCompleted = async () => {
+    await fetch("/api/lessons/complete", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ slug }),
+    });
+  };
 
-export default function LessonProgress({ slug }: { slug: string }) {
-  useEffect(() => {
-    const markCompleted = async () => {
-      await fetch("/api/lessons/complete", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug }),
-      });
-    };
-
-    markCompleted();
-  }, [slug]);
-
-  return null;
+  return (
+    <button
+      onClick={markCompleted}
+      className="mt-6 px-4 py-2 bg-green-600 text-white rounded"
+    >
+      Mark as Completed ✅
+    </button>
+  );
 }

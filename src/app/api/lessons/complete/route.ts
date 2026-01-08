@@ -1,30 +1,32 @@
-import { NextRequest, NextResponse } from "next/server";
+// src/app/api/lessons/complete/route.ts
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.redirect("/api/auth/signin");
+
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   const { slug } = await req.json();
 
-  // Find or create user
-  let user = await prisma.user.findUnique({
-    where: { email: session.user?.email! },
-  });
-  if (!user) {
-    user = await prisma.user.create({
-      data: { email: session.user?.email! },
-    });
-  }
-
-  // Mark lesson as completed
   await prisma.lessonProgress.upsert({
-    where: { userId_slug: { userId: user.id, slug } },
-    update: { completed: true },
-    create: { userId: user.id, slug, completed: true },
+    where: {
+      userId_slug: {
+        userId: session.user.id,
+        slug,
+      },
+    },
+    update: {},
+    create: {
+      userId: session.user.id,
+      slug,
+      completed: true,
+    },
   });
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ success: true });
 }

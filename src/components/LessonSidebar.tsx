@@ -10,9 +10,9 @@ import AuthButton from "@/components/AuthButton";
 export default async function LessonSidebar() {
   const session = await getServerSession(authOptions);
 
+  // If not logged in, still show sidebar but without progress
   let completedSlugs: string[] = [];
 
-  // ✅ Fetch progress ONLY if logged in
   if (session?.user?.id) {
     const completedLessons = await prisma.lessonProgress.findMany({
       where: {
@@ -21,7 +21,7 @@ export default async function LessonSidebar() {
       },
     });
 
-    completedSlugs = completedLessons.map((l) => l.slug);
+    completedSlugs = completedLessons.map((lesson) => lesson.slug);
   }
 
   return (
@@ -29,7 +29,7 @@ export default async function LessonSidebar() {
       {/* Auth button */}
       <AuthButton />
 
-      {/* Search */}
+      {/* Search bar */}
       <LessonSearch />
 
       <h2 className="text-lg font-bold mt-4 mb-2">Learning Path</h2>
