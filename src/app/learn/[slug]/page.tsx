@@ -3,6 +3,8 @@ import path from "path";
 import matter from "gray-matter";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
 
 import LessonProgress from "@/components/LessonProgress";
 import {
@@ -10,6 +12,7 @@ import {
   getNextLesson,
   getPreviousLesson,
 } from "@/lib/lesson-utils";
+import { authOptions } from "@/lib/auth";
 
 type PageProps = {
   params: Promise<{
@@ -18,9 +21,15 @@ type PageProps = {
 };
 
 export default async function LessonPage({ params }: PageProps) {
-  const { slug } = await params; // ✅ App Router requirement
+  const { slug } = await params;
 
-  // ✅ Get lesson metadata
+  // 🔒 AUTH GUARD (SERVER-SIDE)
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    redirect("/api/auth/signin");
+  }
+
+  // ✅ Lesson metadata
   const lesson = getLessonBySlug(slug);
   if (!lesson) {
     throw new Error("Lesson not found");
@@ -29,7 +38,7 @@ export default async function LessonPage({ params }: PageProps) {
   const nextLesson = getNextLesson(slug);
   const previousLesson = getPreviousLesson(slug);
 
-  // ✅ Load MDX file
+  // ✅ Load MDX
   const filePath = path.join(
     process.cwd(),
     "content",

@@ -1,11 +1,18 @@
 "use client";
 
 import { useEffect } from "react";
-import { markLessonCompleted } from "@/lib/progress";
 
 export default function LessonProgress({ slug }: { slug: string }) {
   useEffect(() => {
-    markLessonCompleted(slug);
+    const markCompleted = async () => {
+      await fetch("/api/lessons/complete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug }),
+      });
+    };
+
+    markCompleted();
   }, [slug]);
 
   return null;

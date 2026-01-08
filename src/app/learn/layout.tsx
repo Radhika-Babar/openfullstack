@@ -6,7 +6,6 @@ export default function LearnLayout({ children }: { children: ReactNode }) {
     <div className="flex min-h-screen">
       {/* Sidebar */}
       <aside className="w-64 border-r p-6">
-        <h2 className="text-lg font-bold mb-4">Learning Path</h2>
         <LessonSidebar />
       </aside>
 

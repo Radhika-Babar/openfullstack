@@ -10,11 +10,15 @@
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",
+    "@next-auth/prisma-adapter": "^1.0.7",
     "@next/mdx": "^16.1.1",
+    "@prisma/client": "^6.19.1",
     "@tailwindcss/typography": "^0.5.19",
     "gray-matter": "^4.0.3",
     "next": "16.1.1",
+    "next-auth": "^4.24.13",
     "next-mdx-remote": "^5.0.0",
+    "prisma": "^6.19.1",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },
