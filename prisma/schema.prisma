@@ -8,37 +8,37 @@ datasource db {
 }
 
 model User {
-  id      String           @id @default(cuid())
-  email   String           @unique
-  name    String?
-  image   String?
-  lessons LessonProgress[]
+  id       String           @id @default(cuid())
+  email    String           @unique
+  name     String?
+  image    String?
+
+  progresses LessonProgress[]
 }
 
 model Lesson {
-  id          String @id @default(cuid())
-  slug        String @unique
+  id          String   @id @default(cuid())
+  slug        String   @unique
   title       String
   description String
   category    String
   level       String
   order       Int
-  status      String // "published" | "coming-soon"
+  status      String
 
-  progresses LessonProgress[]
+  progresses  LessonProgress[]
 
-  createdAt DateTime @default(now())
+  createdAt   DateTime @default(now())
 }
 
 model LessonProgress {
-  id        String  @id @default(cuid())
+  id        String   @id @default(cuid())
   userId    String
-  slug      String
+  lessonId  String
   completed Boolean @default(false)
 
-  user     User    @relation(fields: [userId], references: [id])
-  lesson   Lesson? @relation(fields: [lessonId], references: [id])
-  lessonId String?
+  user   User   @relation(fields: [userId], references: [id])
+  lesson Lesson @relation(fields: [lessonId], references: [id])
 
-  @@unique([userId, slug], name: "userId_slug")
+  @@unique([userId, lessonId])
 }
