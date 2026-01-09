@@ -46,8 +46,20 @@ export default async function LessonPage({ params }: PageProps) {
     `${slug}.mdx`
   );
 
-  const fileContent = await fs.readFile(filePath, "utf8");
-  const { content } = matter(fileContent);
+  let content = "";
+
+  if (lesson.status) {
+    try {
+      const fileContent = await fs.readFile(filePath, "utf8");
+      content = matter(fileContent).content;
+    } catch {
+      content = "# Lesson Coming Soon\n\nContent will be added soon.";
+    }
+  } else {
+    content = "# Lesson Coming Soon\n\nThis lesson is not published yet.";
+  }
+
+  //const { content } = matter(fileContent);
 
   return (
     <article className="prose max-w-3xl">
