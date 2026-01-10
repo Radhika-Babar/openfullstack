@@ -1,13 +1,16 @@
-import { lessons } from "./lessons";
+import { prisma } from "@/lib/prisma";
 
-export function searchLessons(query: string) {
-  const q = query.trim().toLowerCase();
+export async function searchLessons(query: string) {
+  if (!query) return [];
 
-  if (!q) return [];
-
-  return lessons.filter(
-    (lesson) =>
-      lesson.title.toLowerCase().includes(q) ||
-      lesson.description.toLowerCase().includes(q)
-  );
+  return prisma.lesson.findMany({
+    where: {
+      title: {
+        contains: query,
+        //mode: "insensitive",
+      },
+      status: "published",
+    },
+    orderBy: { order: "asc" },
+  });
 }

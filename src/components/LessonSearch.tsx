@@ -2,30 +2,40 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { searchLessons } from "@/lib/search";
 
 export default function LessonSearch() {
   const [query, setQuery] = useState("");
+  const [results, setResults] = useState<any[]>([]);
 
-  const results = query.length >= 2 ? searchLessons(query) : [];
+  async function handleSearch(value: string) {
+    setQuery(value);
+
+    if (!value) {
+      setResults([]);
+      return;
+    }
+
+    const res = await fetch(`/api/search?q=${value}`);
+    const data = await res.json();
+    setResults(data);
+  }
 
   return (
-    <div className="mb-6">
+    <div className="mt-4">
       <input
-        type="text"
-        placeholder="Search lessons..."
-        className="w-full rounded border px-3 py-2 focus:outline-none focus:ring"
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={(e) => handleSearch(e.target.value)}
+        placeholder="Search lessons..."
+        className="w-full border px-3 py-2 rounded"
       />
 
       {results.length > 0 && (
-        <ul className="mt-3 space-y-1">
+        <ul className="mt-2 space-y-1">
           {results.map((lesson) => (
-            <li key={lesson.slug}>
+            <li key={lesson.id}>
               <Link
                 href={`/learn/${lesson.slug}`}
-                className="text-sm text-blue-600 hover:underline"
+                className="text-blue-600 hover:underline"
               >
                 {lesson.title}
               </Link>

@@ -10,10 +10,10 @@ export default async function LessonSidebar() {
   const session = await getServerSession(authOptions);
 
   // 1️⃣ Fetch all published lessons
-  const lessons = await prisma.lesson.findMany({
-    where: { status: "published" },
-    orderBy: { order: "asc" },
-  });
+ const lessons = await prisma.lesson.findMany({
+  where: { status: "PUBLISHED" },
+  orderBy: { order: "asc" },
+});
 
   // 2️⃣ Fetch completed lessons (if logged in)
   let completedLessonIds: string[] = [];
@@ -29,7 +29,7 @@ export default async function LessonSidebar() {
       },
     });
 
-    completedLessonIds = completed.map((p) => p.lessonId);
+   completedLessonIds = completed.map((p) => p.lessonId);
   }
 
   return (
